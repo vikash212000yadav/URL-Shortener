@@ -15,3 +15,20 @@ class Query(graphene.ObjectType):
 
     def resolve_urls(self, info, **kwargs):
         return URL.objects.all()
+
+
+class CreateURL(graphene.Mutation):
+    url = graphene.Field(URLType)
+
+    class Arguments:
+        url_o = graphene.String()
+
+    def mutate(self, info, url_o):
+        url = URL(url_o=url_o)
+        url.save()
+
+        return CreateURL(url=url)
+
+
+class Mutation(graphene.ObjectType):
+    create_url = CreateURL.Field()
